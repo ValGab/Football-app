@@ -1,48 +1,48 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
+import moment from "moment";
+import Countdown from "./components/Coutdown";
+import competitions from "./enums/competitions";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import MatchCard from "./components/MatchCard";
 
 function App() {
   const [dataStandings, setDataStandings] = useState(null);
   const [dataTeams, setDataTeams] = useState(null);
   const [isLoading, setisLoading] = useState(true);
   const [selectedComp, setSelectedComp] = useState("PL");
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [lastGamePlayed, setLastGamePlayed] = useState(null);
+  const [nextGame, setNextGame] = useState(null);
+  const [error, setError] = useState(false);
 
-  const urlApi = "http://localhost:3001";
-
-  const competitions = [
-    { compName: "Premier League", id: "2021", code: "PL" },
-    { compName: "Bundesliga", id: "2002", code: "BL1" },
-    { compName: "Primera Division", id: "2014", code: "PD" },
-    { compName: "Ligue 1", id: "2015", code: "FL1" },
-    { compName: "Serie A", id: "2019", code: "SA" },
-    { compName: "Eredivisie", id: "2003", code: "DED" },
-    { compName: "Primeira Liga", id: "2017", code: "PPL" },
-    { compName: "Campeonato Brasileiro Série A", id: "2013", code: "BSA" },
-    { compName: "Championship", id: "2016", code: "ELC" },
-    { compName: "UEFA Champions League", id: "2001", code: "CL" },
-    { compName: "Copa Libertadores", id: "2152", code: "CLI" },
-    { compName: "FIFA World Cup", id: "2000", code: "WC" },
-    { compName: "European Championship", id: "2018", code: "EC" },
-  ];
+  const apiUrl = "https://football-app-back.onrender.com";
 
   useEffect(() => {
+    setError(false);
     const fetchData = async () => {
       try {
-        const responseStandings = await axios.post(urlApi + "/standings", {
+        const responseStandings = await axios.post(apiUrl + "/standings", {
           code: selectedComp,
         });
-        console.log(responseStandings.data);
+
         setDataStandings(responseStandings.data);
 
-        const responseTeams = await axios.post(urlApi + "/teams", {
+        const responseTeams = await axios.post(apiUrl + "/teams", {
           code: selectedComp,
         });
+        if (responseTeams.data.message === "Too many requests") {
+          setError(true);
+        }
         setDataTeams(responseTeams.data);
+        handleTeam(responseTeams.data.teams[0].id);
         setisLoading(false);
       } catch (error) {
         console.log(error.response);
+        if (error.response.data.message === "Too many requests") {
+          setError(true);
+        }
       }
     };
 
@@ -51,40 +51,112 @@ function App() {
 
   const handleComp = (code) => {
     setSelectedComp(code);
+    setLastGamePlayed(null);
+    setNextGame(null);
+    setDataTeams(null);
   };
 
-  const handleTeam = (code) => {
-    setSelectedComp(code);
+  const handleTeam = async (id) => {
+    setError(false);
+    setLastGamePlayed(null);
+    setNextGame(null);
+    try {
+      const responseTeam = await axios.post(apiUrl + "/matches", {
+        id,
+      });
+
+      const lastGamePlayedIndex = responseTeam.data.matches.findLastIndex(
+        (match) => match.status === "FINISHED"
+      );
+      if (lastGamePlayedIndex !== -1) {
+        setLastGamePlayed(responseTeam.data.matches[lastGamePlayedIndex]);
+      }
+
+      const nextGameIndex = responseTeam.data.matches.findIndex(
+        (match) => match.status === "TIMED" || match.status === "SCHEDULED"
+      );
+      if (nextGameIndex !== -1) {
+        setNextGame(responseTeam.data.matches[nextGameIndex]);
+      }
+    } catch (error) {
+      console.log(error.response);
+      if (error.response.data.message === "Too many requests") {
+        setError(true);
+      }
+    }
+  };
+
+  const formattedDate = (date) => {
+    // Conversion en objet Moment
+    const dateObject = moment(date);
+    // Formatage de la date
+    const formattedDate = dateObject.format("DD-MM-YYYY");
+    return formattedDate;
   };
 
   return (
     <div className="container">
+      <Header />
       {isLoading ? (
         <p>En chargement</p>
       ) : (
         <div className="competitions">
-          <select name="competitions" id="competition-select">
-            {competitions.map((competition, index) => {
-              return (
-                <option
-                  key={index}
-                  onClick={() => handleComp(competition.code)}
-                >
-                  {competition.compName}
-                </option>
-              );
-            })}
-          </select>
+          <div className="selections-competition-team">
+            <select name="competitions" id="competition-select">
+              {competitions.map((competition, index) => {
+                return (
+                  <option
+                    key={index}
+                    onClick={() => handleComp(competition.code)}
+                  >
+                    {competition.compName}
+                  </option>
+                );
+              })}
+            </select>
 
-          <select name="competitions" id="competition-select">
-            {dataTeams.teams.map((team, index) => {
-              return (
-                <option key={index} onClick={() => handleTeam(team.id)}>
-                  {team.name}
-                </option>
-              );
-            })}
-          </select>
+            {dataTeams && (
+              <select name="competitions" id="competition-select">
+                {dataTeams.teams.map((team, index) => {
+                  return (
+                    <option key={index} onClick={() => handleTeam(team.id)}>
+                      {team.name}
+                    </option>
+                  );
+                })}
+              </select>
+            )}
+          </div>
+
+          <div>{error && <Countdown />}</div>
+
+          {(lastGamePlayed || nextGame) && (
+            <div className="matches">
+              {lastGamePlayed && (
+                <MatchCard
+                  date={formattedDate(lastGamePlayed.utcDate)}
+                  competition={lastGamePlayed.competition.name}
+                  homeTeamName={lastGamePlayed.homeTeam.name}
+                  homeTeamCrest={lastGamePlayed.homeTeam.crest}
+                  awayTeamName={lastGamePlayed.awayTeam.name}
+                  awayTeamCrest={lastGamePlayed.awayTeam.crest}
+                  scoreHome={lastGamePlayed.score.fullTime.home}
+                  scoreAway={lastGamePlayed.score.fullTime.away}
+                />
+              )}
+
+              {nextGame && (
+                <MatchCard
+                  date={formattedDate(nextGame.utcDate)}
+                  competition={nextGame.competition.name}
+                  homeTeamName={nextGame.homeTeam.name}
+                  homeTeamCrest={nextGame.homeTeam.crest}
+                  awayTeamName={nextGame.awayTeam.name}
+                  awayTeamCrest={nextGame.awayTeam.crest}
+                />
+              )}
+            </div>
+          )}
 
           {dataStandings.competition.type === "LEAGUE" ? (
             <div className="standings">
@@ -114,7 +186,9 @@ function App() {
                           alt={result.team.shortName}
                         />
                       </td>
-                      <td className="team-name">{result.team.name}</td>
+                      <td className="team-name">
+                        {result.team.name && result.team.name}
+                      </td>
                       <td>
                         <div className="form">
                           {result.form &&
@@ -146,12 +220,12 @@ function App() {
                             })}
                         </div>
                       </td>
-                      <td>{result.points}</td>
-                      <td>{result.playedGames}</td>
-                      <td>{result.won}</td>
-                      <td>{result.lost}</td>
-                      <td>{result.draw}</td>
-                      <td>{result.goalDifference}</td>
+                      <td>{result.points && result.points}</td>
+                      <td>{result.playedGames && result.playedGames}</td>
+                      <td>{result.won && result.won}</td>
+                      <td>{result.lost && result.lost}</td>
+                      <td>{result.draw && result.draw}</td>
+                      <td>{result.goalDifference && result.goalDifference}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -162,6 +236,7 @@ function App() {
           )}
         </div>
       )}
+      <Footer />
     </div>
   );
 }
