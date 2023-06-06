@@ -1,38 +1,106 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
+
+:root {
+  --primary-header: rgb(17, 2, 46);
+  --primary-row: rgb(30, 27, 61);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: "Cabin", sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.container {
+  max-width: 1024px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.competitions {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.standings {
+  width: 85%;
+}
+
+.container-logo {
+  height: 30px;
+}
+
+.logo-team-table {
+  height: 100%;
+  margin: 3px 0;
+}
+
+.team-column {
+  width: 270px;
+}
+
+.results-table {
+  width: 100%;
+  table-layout: fixed;
+  border-radius: 20px;
+  overflow: hidden;
   color: white;
+  box-shadow: rgba(14, 30, 37, 0.32) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.52) 0px 2px 16px 0px;
 }
 
-.App-link {
-  color: #61dafb;
+.header-row {
+  height: 45px;
+  background-color: var(--primary-header);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.table-row {
+  display: table-row;
+}
+
+.header-cell,
+.table-row > td {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+tr {
+  border-bottom: 1px solid grey;
+  background-color: var(--primary-row);
+}
+
+tr:last-child {
+  border-bottom: none;
+}
+
+.team-name {
+  text-align: left !important;
+}
+
+.form {
+  display: flex;
+  gap: 2px;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.victory {
+  background-color: green;
+}
+
+.draw {
+  background-color: lightgrey;
+}
+
+.lose {
+  background-color: red;
 }
