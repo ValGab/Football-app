@@ -249,8 +249,8 @@ function App() {
                     <th className="header-cell"></th>
                     <th></th>
                     <th className="header-cell team-column">Équipe</th>
-                    <th className="header-cell">Points</th>
-                    <th className="header-cell">Joués</th>
+                    <th className="header-cell">P</th>
+                    <th className="header-cell">J</th>
                     <th className="header-cell">DB</th>
                   </tr>
                 </thead>

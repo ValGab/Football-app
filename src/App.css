@@ -237,6 +237,10 @@ footer {
     width: 100%;
   }
 
+  .standings {
+    width: 90%;
+  }
+
   .team-column {
     width: 150px;
   }
