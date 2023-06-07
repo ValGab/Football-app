@@ -6,7 +6,7 @@ import Countdown from "./components/Coutdown";
 import competitions from "./enums/competitions";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import MatchCard from "./components/MatchCard";
+import MatchCard from "./components/matchCard/MatchCard";
 import Loader from "./components/loader/Loader";
 
 function App() {

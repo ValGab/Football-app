@@ -1,3 +1,5 @@
+import "./matchCard.css";
+
 const MatchCard = ({
   date,
   competition,
