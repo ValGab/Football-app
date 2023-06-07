@@ -7,6 +7,7 @@ import competitions from "./enums/competitions";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MatchCard from "./components/MatchCard";
+import Loader from "./components/loader/Loader";
 
 function App() {
   const [dataStandings, setDataStandings] = useState(null);
@@ -80,7 +81,7 @@ function App() {
       }
     } catch (error) {
       console.log(error.response);
-      if (error.response.data.message === "Too many requests") {
+      if (error.response?.data?.message === "Too many requests") {
         setError(true);
       }
     }
@@ -98,17 +99,18 @@ function App() {
     <div className="container">
       <Header />
       {isLoading ? (
-        <p>En chargement</p>
+        <Loader />
       ) : (
         <div className="competitions">
           <div className="selections-competition-team">
-            <select name="competitions" id="competition-select">
+            <select
+              name="competitions"
+              id="competition-select"
+              onChange={(event) => handleComp(event.target.value)}
+            >
               {competitions.map((competition, index) => {
                 return (
-                  <option
-                    key={index}
-                    onClick={() => handleComp(competition.code)}
-                  >
+                  <option key={index} value={competition.code}>
                     {competition.compName}
                   </option>
                 );
@@ -116,10 +118,14 @@ function App() {
             </select>
 
             {dataTeams && (
-              <select name="competitions" id="competition-select">
+              <select
+                name="competitions"
+                id="competition-select"
+                onChange={(event) => handleTeam(event.target.value)}
+              >
                 {dataTeams.teams.map((team, index) => {
                   return (
-                    <option key={index} onClick={() => handleTeam(team.id)}>
+                    <option key={index} value={team.id}>
                       {team.name}
                     </option>
                   );
@@ -159,11 +165,11 @@ function App() {
           )}
 
           {dataStandings.competition.type === "LEAGUE" ? (
-            <div className="standings">
+            <div className="standings desktop">
               <table className="results-table">
                 <thead>
                   <tr className="header-row">
-                    <th className="header-cell">Position</th>
+                    <th className="header-cell"></th>
                     <th></th>
                     <th className="header-cell team-column">Équipe</th>
                     <th className="header-cell">Forme</th>
@@ -183,7 +189,7 @@ function App() {
                         <img
                           className="logo-team-table"
                           src={result.team.crest}
-                          alt={result.team.shortName}
+                          alt={result.team.name}
                         />
                       </td>
                       <td className="team-name">
@@ -225,6 +231,45 @@ function App() {
                       <td>{result.won && result.won}</td>
                       <td>{result.lost && result.lost}</td>
                       <td>{result.draw && result.draw}</td>
+                      <td>{result.goalDifference && result.goalDifference}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div></div>
+          )}
+
+          {dataStandings.competition.type === "LEAGUE" ? (
+            <div className="standings mobile">
+              <table className="results-table">
+                <thead>
+                  <tr className="header-row">
+                    <th className="header-cell"></th>
+                    <th></th>
+                    <th className="header-cell team-column">Équipe</th>
+                    <th className="header-cell">Points</th>
+                    <th className="header-cell">Joués</th>
+                    <th className="header-cell">DB</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataStandings.standings[0].table.map((result, index) => (
+                    <tr key={index} className="table-row">
+                      <td>{result.position}</td>
+                      <td className="container-logo">
+                        <img
+                          className="logo-team-table"
+                          src={result.team.crest}
+                          alt={result.team.shortName}
+                        />
+                      </td>
+                      <td className="team-name">
+                        {result.team.name && result.team.name}
+                      </td>
+                      <td>{result.points && result.points}</td>
+                      <td>{result.playedGames && result.playedGames}</td>
                       <td>{result.goalDifference && result.goalDifference}</td>
                     </tr>
                   ))}

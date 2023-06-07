@@ -11,9 +11,9 @@ const MatchCard = ({
   return (
     <div className="match-card">
       <p>
-        {scoreHome ? "Dernier match :" : "Prochain match :"} {date} -{" "}
-        {competition}
+        {scoreHome ? "Dernier match :" : "Prochain match :"} {date}
       </p>
+      <p>{competition}</p>
       <div className="team-match-card">
         <div className="team-logo-match-card">
           <img src={homeTeamCrest} alt={homeTeamName} />

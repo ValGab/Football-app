@@ -20,13 +20,6 @@ header {
   font-weight: bold;
 }
 
-footer {
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .container {
   max-width: 1024px;
   display: flex;
@@ -72,6 +65,10 @@ select {
 
 .standings {
   width: 85%;
+}
+
+.mobile {
+  display: none;
 }
 
 .container-logo {
@@ -173,7 +170,7 @@ tr:last-child {
 .match-card > p {
   text-align: center;
   font-style: italic;
-  margin-bottom: 5px 0;
+  margin-bottom: 20px 0;
 }
 
 .team-match-card {
@@ -207,6 +204,14 @@ tr:last-child {
   justify-content: center;
 }
 
+footer {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 @keyframes fadeIn {
   0% {
     transform: translateY(-10px);
@@ -215,5 +220,37 @@ tr:last-child {
   100% {
     transform: translateY(0);
     opacity: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .mobile {
+    display: block;
+  }
+
+  .selections-competition-team {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  .team-column {
+    width: 150px;
+  }
+
+  .matches {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .match-card {
+    width: 85%;
+  }
+
+  .desktop {
+    display: none;
   }
 }
