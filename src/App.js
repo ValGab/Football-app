@@ -12,7 +12,7 @@ import Loader from "./components/loader/Loader";
 function App() {
   const [dataStandings, setDataStandings] = useState(null);
   const [dataTeams, setDataTeams] = useState(null);
-  const [isLoading, setisLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedComp, setSelectedComp] = useState("PL");
   const [lastGamePlayed, setLastGamePlayed] = useState(null);
   const [nextGame, setNextGame] = useState(null);
@@ -33,15 +33,13 @@ function App() {
         const responseTeams = await axios.post(apiUrl + "/teams", {
           code: selectedComp,
         });
-        if (responseTeams.data.message === "Too many requests") {
-          setError(true);
-        }
+
         setDataTeams(responseTeams.data);
         handleTeam(responseTeams.data.teams[0].id);
-        setisLoading(false);
+        setIsLoading(false);
       } catch (error) {
         console.log(error.response);
-        if (error.response.data.message === "Too many requests") {
+        if (error.response?.data?.message === "Too many requests") {
           setError(true);
         }
       }
