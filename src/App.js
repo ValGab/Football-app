@@ -24,12 +24,14 @@ function App() {
     setError(false);
     const fetchData = async () => {
       try {
+        // On récupère le classement de la compétition
         const responseStandings = await axios.post(apiUrl + "/standings", {
           code: selectedComp,
         });
 
         setDataStandings(responseStandings.data);
 
+        // On récupère les équipes de la compétition
         const responseTeams = await axios.post(apiUrl + "/teams", {
           code: selectedComp,
         });
@@ -39,6 +41,7 @@ function App() {
         setIsLoading(false);
       } catch (error) {
         console.log(error.response);
+        // Si erreur car trop de requêtes, le countdown se déclenche
         if (error.response?.data?.message === "Too many requests") {
           setError(true);
         }
@@ -48,6 +51,10 @@ function App() {
     fetchData();
   }, [selectedComp]);
 
+  /**
+   * Fonction permettant le changement de la compétition et un nouvel appel du useEffect
+   * @param {string} code le code de la compétition
+   */
   const handleComp = (code) => {
     setSelectedComp(code);
     setLastGamePlayed(null);
@@ -55,11 +62,16 @@ function App() {
     setDataTeams(null);
   };
 
+  /**
+   * Fonction permettant de récupérer les matches d'une équipe
+   * @param {*} id id de la team sélectionnée
+   */
   const handleTeam = async (id) => {
     setError(false);
     setLastGamePlayed(null);
     setNextGame(null);
     try {
+      // On récupère les matches d'une équipe en envoyant l'id au serveur
       const responseTeam = await axios.post(apiUrl + "/matches", {
         id,
       });
@@ -79,12 +91,18 @@ function App() {
       }
     } catch (error) {
       console.log(error.response);
+      // Si erreur car trop de requêtes, le countdown se déclenche
       if (error.response?.data?.message === "Too many requests") {
         setError(true);
       }
     }
   };
 
+  /**
+   * Fonction permettant de formater la date
+   * @param {string} date la date à formater
+   * @returns la date formatée
+   */
   const formattedDate = (date) => {
     // Conversion en objet Moment
     const dateObject = moment(date);
