@@ -18,7 +18,7 @@ function App() {
   const [nextGame, setNextGame] = useState(null);
   const [error, setError] = useState(false);
 
-  const apiUrl = "https://football-app-back.onrender.com";
+  const apiUrl = "https://football-app-back.vercel.app";
 
   useEffect(() => {
     setError(false);
