@@ -36,13 +36,21 @@ header {
   align-items: center;
 }
 
+.teams-select,
+.competitions-select {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .countdown {
   margin: 20px 0;
   text-align: center;
 }
 
 select {
-  width: 40%;
+  width: 100%;
   background-color: var(--primary);
   outline: none;
   border: none;
@@ -185,7 +193,8 @@ footer {
     gap: 10px;
   }
 
-  select {
+  .teams-select,
+  .competitions-select {
     width: 100%;
   }
 

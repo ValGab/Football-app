@@ -13,6 +13,7 @@ function App() {
   const [dataStandings, setDataStandings] = useState(null);
   const [dataTeams, setDataTeams] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingComp, setIsLoadingComp] = useState(false);
   const [selectedComp, setSelectedComp] = useState("PL");
   const [lastGamePlayed, setLastGamePlayed] = useState(null);
   const [nextGame, setNextGame] = useState(null);
@@ -30,7 +31,6 @@ function App() {
         });
 
         setDataStandings(responseStandings.data);
-
         // On récupère les équipes de la compétition
         const responseTeams = await axios.post(apiUrl + "/teams", {
           code: selectedComp,
@@ -39,6 +39,7 @@ function App() {
         setDataTeams(responseTeams.data);
         handleTeam(responseTeams.data.teams[0].id);
         setIsLoading(false);
+        setIsLoadingComp(false);
       } catch (error) {
         console.log(error.response);
         // Si erreur car trop de requêtes, le countdown se déclenche
@@ -60,6 +61,7 @@ function App() {
     setLastGamePlayed(null);
     setNextGame(null);
     setDataTeams(null);
+    setIsLoadingComp(true);
   };
 
   /**
@@ -119,35 +121,42 @@ function App() {
       ) : (
         <div className="competitions">
           <div className="selections-competition-team">
-            <select
-              name="competitions"
-              id="competition-select"
-              onChange={(event) => handleComp(event.target.value)}
-            >
-              {competitions.map((competition, index) => {
-                return (
-                  <option key={index} value={competition.code}>
-                    {competition.compName}
-                  </option>
-                );
-              })}
-            </select>
-
-            {dataTeams && (
+            <div className="competitions-select">
               <select
                 name="competitions"
                 id="competition-select"
-                onChange={(event) => handleTeam(event.target.value)}
+                onChange={(event) => handleComp(event.target.value)}
               >
-                {dataTeams.teams.map((team, index) => {
+                {competitions.map((competition, index) => {
                   return (
-                    <option key={index} value={team.id}>
-                      {team.name}
+                    <option key={index} value={competition.code}>
+                      {competition.compName}
                     </option>
                   );
                 })}
               </select>
-            )}
+            </div>
+            <div className="teams-select">
+              {isLoadingComp ? (
+                <Loader />
+              ) : (
+                dataTeams && (
+                  <select
+                    name="competitions"
+                    id="competition-select"
+                    onChange={(event) => handleTeam(event.target.value)}
+                  >
+                    {dataTeams.teams.map((team, index) => {
+                      return (
+                        <option key={index} value={team.id}>
+                          {team.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                )
+              )}
+            </div>
           </div>
 
           <div>{error && <Countdown />}</div>

@@ -16,6 +16,10 @@
   margin-bottom: 20px 0;
 }
 
+.match-card p:first-child {
+  font-weight: bold;
+}
+
 .team-match-card {
   display: flex;
   align-items: center;
