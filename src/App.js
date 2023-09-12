@@ -161,33 +161,35 @@ function App() {
 
           <div>{error && <Countdown />}</div>
 
-          {(lastGamePlayed || nextGame) && (
-            <div className="matches">
-              {lastGamePlayed && (
-                <MatchCard
-                  date={formattedDate(lastGamePlayed.utcDate)}
-                  competition={lastGamePlayed.competition.name}
-                  homeTeamName={lastGamePlayed.homeTeam.name}
-                  homeTeamCrest={lastGamePlayed.homeTeam.crest}
-                  awayTeamName={lastGamePlayed.awayTeam.name}
-                  awayTeamCrest={lastGamePlayed.awayTeam.crest}
-                  scoreHome={lastGamePlayed.score.fullTime.home}
-                  scoreAway={lastGamePlayed.score.fullTime.away}
-                />
-              )}
+          <div className="matches">
+            {lastGamePlayed ? (
+              <MatchCard
+                date={formattedDate(lastGamePlayed.utcDate)}
+                competition={lastGamePlayed.competition.name}
+                homeTeamName={lastGamePlayed.homeTeam.name}
+                homeTeamCrest={lastGamePlayed.homeTeam.crest}
+                awayTeamName={lastGamePlayed.awayTeam.name}
+                awayTeamCrest={lastGamePlayed.awayTeam.crest}
+                scoreHome={lastGamePlayed.score.fullTime.home}
+                scoreAway={lastGamePlayed.score.fullTime.away}
+              />
+            ) : (
+              <div className="match-card-empty"></div>
+            )}
 
-              {nextGame && (
-                <MatchCard
-                  date={formattedDate(nextGame.utcDate)}
-                  competition={nextGame.competition.name}
-                  homeTeamName={nextGame.homeTeam.name}
-                  homeTeamCrest={nextGame.homeTeam.crest}
-                  awayTeamName={nextGame.awayTeam.name}
-                  awayTeamCrest={nextGame.awayTeam.crest}
-                />
-              )}
-            </div>
-          )}
+            {nextGame ? (
+              <MatchCard
+                date={formattedDate(nextGame.utcDate)}
+                competition={nextGame.competition.name}
+                homeTeamName={nextGame.homeTeam.name}
+                homeTeamCrest={nextGame.homeTeam.crest}
+                awayTeamName={nextGame.awayTeam.name}
+                awayTeamCrest={nextGame.awayTeam.crest}
+              />
+            ) : (
+              <div className="match-card-empty"></div>
+            )}
+          </div>
 
           {dataStandings.competition.type === "LEAGUE" ? (
             <div className="standings desktop">

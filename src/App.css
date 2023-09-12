@@ -15,9 +15,17 @@ a {
 }
 
 header {
-  margin: 25px 0;
-  font-size: 26px;
+  margin: 15px 0;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+header h1 {
+  font-size: 26px;
+  margin-bottom: 10px;
 }
 
 .container {
@@ -164,6 +172,16 @@ tr:last-child {
   margin: 20px 0;
 }
 
+.match-card-empty {
+  background-color: lightgrey;
+  width: 40%;
+  padding: 5px;
+  border-radius: 10px;
+  height: 190px;
+}
+
+/* FOOTER */
+
 footer {
   height: 50px;
   display: flex;
@@ -211,7 +229,8 @@ footer {
     gap: 25px;
   }
 
-  .match-card {
+  .match-card,
+  .match-card-empty {
     width: 85%;
   }
 

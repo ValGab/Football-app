@@ -1,7 +1,7 @@
 .match-card {
   display: flex;
   flex-direction: column;
-  width: calc(40%);
+  width: 40%;
   padding: 5px;
   border-radius: 10px;
   border: 2px solid var(--primary);
