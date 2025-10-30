@@ -15,7 +15,7 @@ a {
 }
 
 header {
-  margin: 15px 0;
+  padding: 15px;
   font-weight: bold;
   display: flex;
   justify-content: center;
@@ -28,13 +28,22 @@ header h1 {
   margin-bottom: 10px;
 }
 
+header p {
+  text-align: center;
+}
+
 .container {
   max-width: 1024px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin: 0 auto;
+}
+
+main {
+  flex: 1;
 }
 
 .selections-competition-team {
@@ -140,29 +149,6 @@ tr:last-child {
   text-align: left !important;
 }
 
-.form {
-  display: flex;
-  gap: 2px;
-}
-
-.circle {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.victory {
-  background-color: green;
-}
-
-.draw {
-  background-color: lightgrey;
-}
-
-.lose {
-  background-color: red;
-}
-
 .matches {
   width: 100%;
   display: flex;
@@ -183,11 +169,11 @@ tr:last-child {
 /* FOOTER */
 
 footer {
-  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding-block: 15px;
 }
 
 @keyframes fadeIn {
