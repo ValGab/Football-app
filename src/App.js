@@ -38,8 +38,9 @@ function App() {
     isLoading: loadingStandings,
     isError: errorStandings,
   } = useQuery({
-    queryKey: ["standings", selectedComp],
+    queryKey: ["standings", { selectedComp }],
     queryFn: () => fetchStandings(selectedComp),
+    staleTime: 5 * 60 * 1000, // 5 minutes
     keepPreviousData: true,
   });
 
@@ -49,9 +50,10 @@ function App() {
     isLoading: loadingTeams,
     isError: errorTeams,
   } = useQuery({
-    queryKey: ["teams", selectedComp],
+    queryKey: ["teams", { selectedComp }],
     queryFn: () => fetchTeams(selectedComp),
     keepPreviousData: true,
+    staleTime: 5 * 60 * 1000, // 5 minutes
     onSuccess: (data) => {
       if (!selectedTeam) setSelectedTeam(data.teams[0].id);
     },
@@ -59,9 +61,10 @@ function App() {
 
   // Matches query
   const { data: dataMatches, isError: errorMatches } = useQuery({
-    queryKey: ["matches", selectedTeam],
+    queryKey: ["matches", { selectedTeam }],
     queryFn: () => fetchMatches(selectedTeam),
     enabled: !!selectedTeam,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // **Effet pour sélectionner la première équipe dès que les données sont chargées**
@@ -85,7 +88,7 @@ function App() {
     setSelectedTeam(null);
   };
 
-  const handleTeam = (id) => setSelectedTeam(id);
+  const handleTeam = (id) => setSelectedTeam(Number(id));
 
   const formattedDate = (date) => moment(date).format("DD-MM-YYYY");
 
