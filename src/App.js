@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import moment from "moment";
 import Countdown from "./components/Coutdown";
 import competitions from "./enums/competitions";
 import Header from "./components/Header";
@@ -90,8 +89,6 @@ function App() {
 
   const handleTeam = (id) => setSelectedTeam(Number(id));
 
-  const formattedDate = (date) => moment(date).format("DD-MM-YYYY");
-
   const isLoading = loadingStandings || loadingTeams;
   const isError = errorStandings || errorTeams || errorMatches;
 
@@ -142,7 +139,7 @@ function App() {
             <div className="matches">
               {lastGamePlayed ? (
                 <MatchCard
-                  date={formattedDate(lastGamePlayed.utcDate)}
+                  date={lastGamePlayed.utcDate}
                   competition={lastGamePlayed.competition.name}
                   homeTeamName={lastGamePlayed.homeTeam.name}
                   homeTeamCrest={lastGamePlayed.homeTeam.crest}
@@ -157,7 +154,7 @@ function App() {
 
               {nextGame ? (
                 <MatchCard
-                  date={formattedDate(nextGame.utcDate)}
+                  date={nextGame.utcDate}
                   competition={nextGame.competition.name}
                   homeTeamName={nextGame.homeTeam.name}
                   homeTeamCrest={nextGame.homeTeam.crest}

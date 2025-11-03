@@ -1,3 +1,4 @@
+import moment from "moment";
 import "./matchCard.css";
 
 const MatchCard = ({
@@ -10,10 +11,16 @@ const MatchCard = ({
   scoreHome,
   scoreAway,
 }) => {
+  const formattedDate = () => moment(date).format("DD-MM-YYYY");
+
+  const gameDate = new Date(date);
+  const today = new Date();
+
   return (
     <div className="match-card">
       <p>
-        {scoreHome ? "Dernier match :" : "Prochain match :"} {date}
+        {today > gameDate ? "Dernier match :" : "Prochain match :"}{" "}
+        {formattedDate()}
       </p>
       <p>{competition}</p>
       <div className="team-match-card">
